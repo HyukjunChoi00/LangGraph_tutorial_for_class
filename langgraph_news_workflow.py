@@ -7,7 +7,7 @@ from langgraph.graph.message import add_messages
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.tools import tool
+# from langchain_core.tools import tool  # 사용하지 않음
 from playwright.async_api import async_playwright
 
 
@@ -147,6 +147,7 @@ async def search_news(state):
         if keyword:
             print(f"   검색 키워드: {keyword}")
             try:
+                # 직접 함수 호출 (도구 데코레이터 제거)
                 result = await scrape_articles_with_content(keyword, max_articles=2)
                 if result and "오류" not in result and "실패" not in result:
                     all_results.append(f"=== {keyword} 검색 결과 ===\n{result}\n")
@@ -160,8 +161,7 @@ async def search_news(state):
     return {"search_results": search_results}
 
 
-# 비동기 스크래핑 도구 정의
-@tool
+# 비동기 스크래핑 함수 정의
 async def scrape_articles_with_content(query: str, max_articles: int = 3) -> str:
     """
     Econotimes에서 관련 기사 제목, URL, 본문을 스크랩하는 비동기 함수
